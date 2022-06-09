@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
   void _signIn() async {
     try {
       final cred = await AuthProvider().signInWithGoogle();
-      print(cred);
+      // print(cred);
       setState(() {
         _isSignIn = true;
       });
