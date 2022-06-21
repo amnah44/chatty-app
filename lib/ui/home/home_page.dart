@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ffs/auth//stub.dart'
-    if (dart.library.io) 'package:ffs/auth/android_auth_provider.dart'
-    if (dart.library.html) 'package:ffs/auth/web_auth_provider.dart';
 import 'package:ffs/ui/message/message_page.dart';
 import 'package:ffs/ui/message/message_wall_widget.dart';
 import 'package:ffs/util/extension/toast.dart';
+import 'package:ffs/util/unit/unit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/button_list.dart';
-import 'package:flutter_signin_button/button_view.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.title}) : super(key: key);
@@ -21,7 +18,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _isSignIn = false;
   final firebaseStore = FirebaseFirestore.instance.collection('chatty');
 
   @override
@@ -29,30 +25,19 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user is User) {
-        _isSignIn = true;
-      } else {
-        _isSignIn = false;
+        Unit.isSignIn = true;
       }
+      // } else {
+      //   Unit.isSignIn = false;
+      // }
       setState(() {});
     });
-  }
-
-  void _signIn() async {
-    try {
-      final cred = await AuthProvider().signInWithGoogle();
-      // print(cred);
-      setState(() {
-        _isSignIn = true;
-      });
-    } catch (e) {
-      print("Login failed: $e");
-    }
   }
 
   void _signOut() async {
     await FirebaseAuth.instance.signOut();
     setState(() {
-      _isSignIn = false;
+      Get.back();
       'sign out is successful'.toToast();
     });
   }
@@ -82,23 +67,28 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title!),
+        automaticallyImplyLeading: false,
         centerTitle: true,
         actions: [
-          if (_isSignIn)
-            InkWell(
-              onTap: _signOut,
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Center(
-                  child: Text(
-                    "Logout",
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
+          PopupMenuButton(
+            position: PopupMenuPosition.under,
+            onSelected: (value) {
+              if (value == 'logout') {
+                _signOut();
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'logout',
+                child: Text(
+                  "Logout",
+                  style: TextStyle(
+                    fontSize: 16,
                   ),
                 ),
-              ),
-            )
+              )
+            ],
+          )
         ],
       ),
       backgroundColor: const Color(0xffe3eafc),
@@ -106,7 +96,12 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: firebaseStore.orderBy('timestamp').snapshots(),
+              stream: firebaseStore
+                  .orderBy(
+                    'timestamp',
+                    descending: true,
+                  )
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   if (snapshot.data!.docs.isEmpty) {
@@ -115,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            "images/img.png",
+                            "assets/images/img.png",
                             width: MediaQuery.of(context).size.width * 0.8,
                             height: MediaQuery.of(context).size.height * 0.3,
                           ),
@@ -123,6 +118,7 @@ class _HomePageState extends State<HomePage> {
                             "No message for now",
                             style: TextStyle(
                               fontSize: 18,
+                              fontFamily: 'Montserrat',
                               fontWeight: FontWeight.bold,
                               color: Colors.blueGrey,
                             ),
@@ -137,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 } else {
                   return const Center(
-                    child: SpinKitFadingCircle(
+                    child: SpinKitDualRing(
                       color: Colors.blue,
                       size: 64,
                     ),
@@ -146,17 +142,9 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ),
-          (_isSignIn)
-              ? MessagePage(
-                  onSubmit: _addMessage,
-                )
-              : Container(
-                  padding: const EdgeInsets.all(8),
-                  child: SignInButton(
-                    Buttons.Google,
-                    onPressed: _signIn,
-                  ),
-                )
+          MessagePage(
+            onSubmit: _addMessage,
+          )
         ],
       ),
     );

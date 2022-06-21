@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ffs/ui/message/chat_message_other.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import 'chat_message_own.dart';
 
@@ -27,11 +29,14 @@ class MessageWallWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      shrinkWrap: true,
+      reverse: true,
       itemCount: messages.length,
       itemBuilder: (builder, index) {
         final user = FirebaseAuth.instance.currentUser;
 
-        if (user != null && user.uid == messages[index]['id']) {
+        if (user?.uid == messages[index]['id']) {
           return Dismissible(
             onDismissed: (_) => onDelete(messages[index].id),
             key: ValueKey(messages[index]['timestamp']),

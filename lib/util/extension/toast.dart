@@ -6,8 +6,8 @@ extension ToastManger on String {
     Fluttertoast.showToast(
       msg: this,
       fontSize: 16,
-      backgroundColor: Colors.blue,
-      textColor: Colors.white,
+      backgroundColor: Colors.white,
+      textColor: Colors.black87,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
     );

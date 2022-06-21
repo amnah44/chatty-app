@@ -34,9 +34,9 @@ class ChatMessageOther extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.zero,
-              topRight: Radius.circular(24),
-              bottomRight: Radius.circular(24),
-              topLeft: Radius.circular(24),
+              topRight: Radius.circular(40),
+              bottomRight: Radius.circular(40),
+              topLeft: Radius.circular(40),
             ),
           ),
           child: Column(
@@ -46,15 +46,18 @@ class ChatMessageOther extends StatelessWidget {
                 data['auth'],
                 style: TextStyle(
                   fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.w700,
                   color: Colors.blueAccent.shade700,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Text(
                 data['message'],
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87
+                ),
               )
             ],
           ),

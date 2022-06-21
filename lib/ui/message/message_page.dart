@@ -22,7 +22,14 @@ class _MessagePageState extends State<MessagePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(8),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -30,6 +37,11 @@ class _MessagePageState extends State<MessagePage> {
             child: TextField(
               minLines: 1,
               maxLines: 20,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Montserrat',
+              ),
               decoration: InputDecoration(
                 hintText: "Type a message",
                 contentPadding: const EdgeInsets.all(8),
@@ -49,23 +61,21 @@ class _MessagePageState extends State<MessagePage> {
             ),
           ),
           const SizedBox(width: 4),
-          RawMaterialButton(
-            onPressed: _message == null || _message.isEmpty ? null : _onPressed,
-            fillColor: _message == null || _message.isEmpty
-                ? Theme.of(context).primaryColorLight
-                : Theme.of(context).primaryColor,
-            padding: const EdgeInsets.all(14),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Text(
-              "Send",
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+          InkWell(
+            onTap: _message == null || _message.isEmpty ? null : _onPressed,
+            child: Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: _message == null || _message.isEmpty
+                      ? Theme.of(context).primaryColorLight
+                      : Theme.of(context).primaryColor,
+                ),
+                child: const Icon(
+                  Icons.send,
+                  color: Colors.white,
+                  size: 32,
+                )),
           )
         ],
       ),
