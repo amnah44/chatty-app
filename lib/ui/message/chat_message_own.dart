@@ -18,8 +18,8 @@ class ChatMessageOwn extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          margin: const EdgeInsets.only(top: 12),
-          padding: const EdgeInsets.fromLTRB(24, 18, 24, 18),
+          margin: const EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.fromLTRB(18, 14, 18, 14),
           constraints:
               BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.8),
           decoration: BoxDecoration(
@@ -27,14 +27,14 @@ class ChatMessageOwn extends StatelessWidget {
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(40),
               topRight: Radius.circular(40),
-              bottomRight: Radius.zero,
+              bottomRight: Radius.circular(40),
               topLeft: Radius.circular(40),
             ),
           ),
           child: Text(
             data['message'],
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               color: Colors.white,
             ),
           ),

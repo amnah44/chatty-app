@@ -26,8 +26,8 @@ class ChatMessageOther extends StatelessWidget {
           const SizedBox(width: 39),
         const SizedBox(width: 8),
         Container(
-          margin: const EdgeInsets.only(top: 16),
-          padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
+          margin: const EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.fromLTRB(18, 8, 18, 8),
           constraints:
               BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.8),
           decoration: const BoxDecoration(
@@ -45,7 +45,7 @@ class ChatMessageOther extends StatelessWidget {
               Text(
                 data['auth'],
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 12,
                   fontFamily: 'Montserrat',
                   fontWeight: FontWeight.w700,
                   color: Colors.blueAccent.shade700,
@@ -55,7 +55,7 @@ class ChatMessageOther extends StatelessWidget {
               Text(
                 data['message'],
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.black87
                 ),
               )

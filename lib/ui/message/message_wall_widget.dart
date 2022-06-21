@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ffs/ui/message/chat_message_other.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import 'chat_message_own.dart';
 
@@ -31,6 +29,7 @@ class MessageWallWidget extends StatelessWidget {
     return ListView.builder(
       physics: const BouncingScrollPhysics(),
       shrinkWrap: true,
+      padding: const EdgeInsets.only(bottom: 8),
       reverse: true,
       itemCount: messages.length,
       itemBuilder: (builder, index) {

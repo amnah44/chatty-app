@@ -14,15 +14,16 @@ class _MessagePageState extends State<MessagePage> {
   var _message;
 
   void _onPressed() {
+    setState(() {});
     widget.onSubmit(_message);
-    _message = "";
     _controller.clear();
+    _message = "";
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(4),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -38,7 +39,7 @@ class _MessagePageState extends State<MessagePage> {
               minLines: 1,
               maxLines: 20,
               style: const TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 fontFamily: 'Montserrat',
               ),
@@ -64,7 +65,8 @@ class _MessagePageState extends State<MessagePage> {
           InkWell(
             onTap: _message == null || _message.isEmpty ? null : _onPressed,
             child: Container(
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(8),
+                margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50),
                   color: _message == null || _message.isEmpty
