@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final firebaseStore = FirebaseFirestore.instance.collection('chatty');
+  bool _isFloatingButtonExtended = false;
 
   @override
   void initState() {
@@ -92,61 +93,76 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       backgroundColor: const Color(0xffe3eafc),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: firebaseStore
-                  .orderBy(
-                    'timestamp',
-                    descending: true,
-                  )
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data!.docs.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "assets/images/img.png",
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            height: MediaQuery.of(context).size.height * 0.3,
-                          ),
-                          const Text(
-                            "No message for now",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueGrey,
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification.metrics.pixels ==
+              notification.metrics.minScrollExtent) {
+            _isFloatingButtonExtended = false;
+            print("uuuuuuuuuuuu");
+          } else if (!_isFloatingButtonExtended) {
+            _isFloatingButtonExtended = true;
+            print("mmmmmmmmm");
+          }
+          setState(() {});
+          return true;
+        },
+        child: Column(
+          children: [
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: firebaseStore
+                    .orderBy(
+                      'timestamp',
+                      descending: true,
+                    )
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data!.docs.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "assets/images/img.png",
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              height: MediaQuery.of(context).size.height * 0.3,
                             ),
-                          )
-                        ],
+                            const Text(
+                              "No message for now",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueGrey,
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    }
+                    return MessageWallWidget(
+                      messages: snapshot.data!.docs,
+                      onDelete: _onDeleteMessage,
+                    );
+                  } else {
+                    return const Center(
+                      child: SpinKitDualRing(
+                        color: Colors.blue,
+                        size: 64,
                       ),
                     );
                   }
-                  return MessageWallWidget(
-                    messages: snapshot.data!.docs,
-                    onDelete: _onDeleteMessage,
-                  );
-                } else {
-                  return const Center(
-                    child: SpinKitDualRing(
-                      color: Colors.blue,
-                      size: 64,
-                    ),
-                  );
-                }
-              },
+                },
+              ),
             ),
-          ),
-          MessagePage(
-            onSubmit: _addMessage,
-          )
-        ],
+            MessagePage(
+              onSubmit: _addMessage,
+            )
+          ],
+        ),
       ),
+
     );
   }
 }
