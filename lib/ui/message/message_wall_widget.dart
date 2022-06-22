@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ffs/ui/home/custom_floating_action_buton.dart';
 import 'package:ffs/ui/message/chat_message_other.dart';
+import 'package:ffs/util/extension/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'chat_message_own.dart';
 
@@ -9,11 +12,13 @@ class MessageWallWidget extends StatelessWidget {
   final List<QueryDocumentSnapshot> messages;
   final ValueChanged<String> onDelete;
 
-  const MessageWallWidget({
+  MessageWallWidget({
     Key? key,
     required this.messages,
     required this.onDelete,
   }) : super(key: key);
+  Rx<bool> _isFloatingButtonExtended = false.obs;
+  ScrollController listScrollController = ScrollController();
 
   bool _shouldDisplayAvatar(int index) {
     if (index == 0) return true;
@@ -26,33 +31,61 @@ class MessageWallWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      shrinkWrap: true,
-      padding: const EdgeInsets.only(bottom: 8),
-      reverse: true,
-      itemCount: messages.length,
-      itemBuilder: (builder, index) {
-        final user = FirebaseAuth.instance.currentUser;
+    return Scaffold(
+      backgroundColor: const Color(0xffe3eafc),
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification.metrics.pixels ==
+              notification.metrics.minScrollExtent) {
+            _isFloatingButtonExtended.value = false;
+          } else if (!_isFloatingButtonExtended.value) {
+            _isFloatingButtonExtended.value = true;
+          }
+          return true;
+        },
+        child: ListView.builder(
+          controller: listScrollController,
+          physics: const BouncingScrollPhysics(),
+          shrinkWrap: true,
+          padding: const EdgeInsets.only(bottom: 8),
+          reverse: true,
+          itemCount: messages.length,
+          itemBuilder: (builder, index) {
+            final user = FirebaseAuth.instance.currentUser;
 
-        if (user?.uid == messages[index]['id']) {
-          return Dismissible(
-            onDismissed: (_) => onDelete(messages[index].id),
-            key: ValueKey(messages[index]['timestamp']),
-            child: ChatMessageOwn(
-              data: messages[index].data() as Map<String, dynamic>,
-              index: index,
-              isShowAvatar: _shouldDisplayAvatar(index),
-            ),
-          );
-        } else {
-          return ChatMessageOther(
-            data: messages[index].data() as Map<String, dynamic>,
-            index: index,
-            isShowAvatar: _shouldDisplayAvatar(index),
-          );
-        }
-      },
+            if (user?.uid == messages[index]['id']) {
+              return Dismissible(
+                onDismissed: (_) => onDelete(messages[index].id),
+                key: ValueKey(messages[index]['timestamp']),
+                child: ChatMessageOwn(
+                  data: messages[index].data() as Map<String, dynamic>,
+                  index: index,
+                  isShowAvatar: _shouldDisplayAvatar(index),
+                ),
+              );
+            } else {
+              return ChatMessageOther(
+                data: messages[index].data() as Map<String, dynamic>,
+                index: index,
+                isShowAvatar: _shouldDisplayAvatar(index),
+              );
+            }
+          },
+        ),
+      ),
+      floatingActionButton: Obx(
+        () => _isFloatingButtonExtended.value
+            ? CustomFloatingActionButton(
+                onClick: () {
+                  if (listScrollController.hasClients) {
+                    final position =
+                        listScrollController.position.minScrollExtent;
+                    listScrollController.jumpTo(position);
+                  }
+                },
+              )
+            : Container(),
+      ),
     );
   }
 }
