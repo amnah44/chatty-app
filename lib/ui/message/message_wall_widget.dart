@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ffs/ui/home/custom_floating_action_buton.dart';
 import 'package:ffs/ui/message/chat_message_other.dart';
-import 'package:ffs/util/extension/toast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -80,7 +79,11 @@ class MessageWallWidget extends StatelessWidget {
                   if (listScrollController.hasClients) {
                     final position =
                         listScrollController.position.minScrollExtent;
-                    listScrollController.jumpTo(position);
+                    listScrollController.animateTo(
+                      position,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeIn,
+                    );
                   }
                 },
               )
