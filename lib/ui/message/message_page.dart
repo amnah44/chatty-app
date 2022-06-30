@@ -1,3 +1,4 @@
+import 'package:auto_direction/auto_direction.dart';
 import 'package:flutter/material.dart';
 
 class MessagePage extends StatefulWidget {
@@ -32,7 +33,6 @@ class _MessagePageState extends State<MessagePage> {
         ),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Expanded(
             child: TextField(
