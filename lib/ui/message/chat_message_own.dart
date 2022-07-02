@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ChatMessageOwn extends StatelessWidget {
   ChatMessageOwn({
@@ -24,20 +25,31 @@ class ChatMessageOwn extends StatelessWidget {
               BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.8),
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColorDark,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(40),
-              topRight: Radius.circular(40),
-              bottomRight: Radius.circular(40),
-              topLeft: Radius.circular(40),
-            ),
+            borderRadius: BorderRadius.circular(18),
           ),
-          child: Text(
-            data['message'],
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.white,
-            ),
-          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                data['message'],
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                DateFormat('HH:MM a').format(
+                  DateTime.fromMillisecondsSinceEpoch(
+                    int.parse("${data['timestamp']}"),
+                  ),
+                ),
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.white60,
+                ),
+              ),
+            ],
+          )
         ),
         const SizedBox(width: 16),
       ],

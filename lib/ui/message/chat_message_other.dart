@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ChatMessageOther extends StatelessWidget {
   ChatMessageOther({
@@ -28,35 +29,53 @@ class ChatMessageOther extends StatelessWidget {
         Container(
           margin: const EdgeInsets.only(top: 8),
           padding: const EdgeInsets.fromLTRB(18, 8, 18, 8),
-          constraints:
-              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.8),
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.8,
+          ),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.zero,
-              topRight: Radius.circular(40),
-              bottomRight: Radius.circular(40),
-              topLeft: Radius.circular(40),
+              topRight: Radius.circular(18),
+              bottomRight: Radius.circular(18),
+              topLeft: Radius.circular(18),
             ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
             children: [
-              Text(
-                data['auth'],
-                style: TextStyle(
-                  fontSize: 12,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w700,
-                  color: Colors.blueAccent.shade700,
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    data['auth'],
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w700,
+                      color: Colors.blueAccent.shade700,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    data['message'],
+                    style: const TextStyle(fontSize: 14, color: Colors.black87),
+                  ),
+                  const SizedBox(height: 18),
+                ],
               ),
-              const SizedBox(height: 6),
-              Text(
-                data['message'],
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.black87
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Text(
+                  DateFormat('HH:MM a').format(
+                    DateTime.fromMillisecondsSinceEpoch(
+                      int.parse("${data['timestamp']}"),
+                    ),
+                  ),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black54,
+                  ),
                 ),
               )
             ],
