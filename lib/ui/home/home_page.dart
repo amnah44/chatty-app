@@ -49,6 +49,7 @@ class _HomePageState extends State<HomePage> {
         'auth': user.displayName ?? "",
         'id': user.uid,
         'phonenumber': user.phoneNumber ?? "",
+        'type': "text",
         'timestamp': Timestamp.now().millisecondsSinceEpoch,
         'profileImage': user.photoURL ??
             "https://avatars.githubusercontent.com/u/59895284?v=4",
