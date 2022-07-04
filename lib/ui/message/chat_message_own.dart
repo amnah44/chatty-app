@@ -55,15 +55,27 @@ class ChatMessageOwn extends StatelessWidget {
               const SizedBox(width: 16),
             ],
           )
-        : Container(
-            width: 200,
-            height: 200,
-            color: Colors.white,
-            child: data['message'] != ""
-                ? Image.network(data['message'])
-                : SpinKitDualRing(
-                    color: Theme.of(context).primaryColorLight,
-                  ),
+        : Padding(
+            padding: const EdgeInsets.fromLTRB(18, 14, 18, 8),
+            child: Stack(
+              alignment: Alignment.centerRight,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: data['message'] != ""
+                      ? Image.network(
+                          data['message'],
+                          fit: BoxFit.fill,
+                          width: MediaQuery.of(context).size.width * 0.55,
+                          height: MediaQuery.of(context).size.height * 0.4,
+                        )
+                      : SpinKitDualRing(
+                          color: Theme.of(context).primaryColorLight,
+                          size: 40,
+                        ),
+                )
+              ],
+            ),
           );
   }
 }

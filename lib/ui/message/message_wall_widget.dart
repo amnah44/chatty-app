@@ -16,7 +16,7 @@ class MessageWallWidget extends StatelessWidget {
     required this.messages,
     required this.onDelete,
   }) : super(key: key);
-  Rx<bool> _isFloatingButtonExtended = false.obs;
+  final Rx<bool> _isFloatingButtonExtended = false.obs;
   ScrollController listScrollController = ScrollController();
 
   bool _shouldDisplayAvatar(int index) {
@@ -45,7 +45,6 @@ class MessageWallWidget extends StatelessWidget {
         child: ListView.builder(
           controller: listScrollController,
           physics: const BouncingScrollPhysics(),
-          shrinkWrap: true,
           padding: const EdgeInsets.only(bottom: 8),
           reverse: true,
           itemCount: messages.length,

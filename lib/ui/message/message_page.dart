@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ffs/util/direction.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -44,21 +45,30 @@ class _MessagePageState extends State<MessagePage> {
   }
 
   Future uploadImage() async {
+    var user = FirebaseAuth.instance.currentUser;
     String fileName = Uuid().v1();
     int status = 1;
 
-    await firebaseFirestore.collection('chatty').doc(fileName).set({
-      'type': "image",
-      'timestamp': Timestamp.now().millisecondsSinceEpoch,
-      'message': "",
-    });
-
+    if (user != null) {
+      await firebaseFirestore.collection('chatty').doc(fileName).set({
+        'auth': user.displayName ?? "",
+        'id': user.uid,
+        'phonenumber': user.phoneNumber ?? "",
+        'type': "image",
+        'timestamp': FieldValue.serverTimestamp(),
+        'profileImage': user.photoURL ??
+            "https://avatars.githubusercontent.com/u/59895284?v=4",
+        'message': fileName,
+      });
+    }
     var ref =
         FirebaseStorage.instance.ref().child("image").child("$fileName.jpg");
 
     var upload = await ref.putFile(imageFile!).catchError((error) async {
       await firebaseFirestore.collection('chatty').doc(fileName).delete();
       status = 0;
+
+      print("mmmmmmmmmmmmmmmmm $error");
     });
 
     if (status == 1) {
@@ -67,6 +77,8 @@ class _MessagePageState extends State<MessagePage> {
           .collection('chatty')
           .doc(fileName)
           .update({'message': imageUrl});
+
+      print("mmmmmmmmmmmmmmmmm $imageUrl");
     }
   }
 
