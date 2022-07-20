@@ -4,18 +4,21 @@ import 'package:ffs/ui/message/chat_message_other.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:swipe_to/swipe_to.dart';
 
 import 'chat_message_own.dart';
 
 class MessageWallWidget extends StatelessWidget {
   final List<QueryDocumentSnapshot> messages;
   final ValueChanged<String> onDelete;
+  final ValueChanged<String> onSwipeMessage;
 
-  MessageWallWidget({
-    Key? key,
-    required this.messages,
-    required this.onDelete,
-  }) : super(key: key);
+  MessageWallWidget(
+      {Key? key,
+      required this.messages,
+      required this.onDelete,
+      required this.onSwipeMessage})
+      : super(key: key);
   final Rx<bool> _isFloatingButtonExtended = false.obs;
   ScrollController listScrollController = ScrollController();
 
@@ -62,10 +65,13 @@ class MessageWallWidget extends StatelessWidget {
                 ),
               );
             } else {
-              return ChatMessageOther(
-                data: messages[index].data() as Map<String, dynamic>,
-                index: index,
-                isShowAvatar: _shouldDisplayAvatar(index),
+              return SwipeTo(
+                onRightSwipe: () => onSwipeMessage(messages[index].id),
+                child: ChatMessageOther(
+                  data: messages[index].data() as Map<String, dynamic>,
+                  index: index,
+                  isShowAvatar: _shouldDisplayAvatar(index),
+                ),
               );
             }
           },

@@ -19,6 +19,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final firebaseStore = FirebaseFirestore.instance.collection('chatty');
+  String replyMessage = "";
+  final focusNode = FocusNode();
 
   @override
   void initState() {
@@ -27,9 +29,6 @@ class _HomePageState extends State<HomePage> {
       if (user is User) {
         Unit.isSignIn = true;
       }
-      // } else {
-      //   Unit.isSignIn = false;
-      // }
       setState(() {});
     });
   }
@@ -131,6 +130,10 @@ class _HomePageState extends State<HomePage> {
                   return MessageWallWidget(
                     messages: snapshot.data!.docs,
                     onDelete: _onDeleteMessage,
+                    onSwipeMessage: (message) {
+                      replyToMessage(message);
+                      focusNode.requestFocus();
+                    },
                   );
                 } else {
                   return const Center(
@@ -145,9 +148,16 @@ class _HomePageState extends State<HomePage> {
           ),
           MessagePage(
             onSubmit: _addMessage,
+            focusNode: focusNode,
           )
         ],
       ),
     );
+  }
+
+  void replyToMessage( String message){
+    setState((){
+      replyMessage = message;
+    });
   }
 }

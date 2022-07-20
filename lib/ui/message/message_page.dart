@@ -9,9 +9,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 class MessagePage extends StatefulWidget {
-  MessagePage({Key? key, required this.onSubmit}) : super(key: key);
+  MessagePage({Key? key, required this.onSubmit, required this.focusNode}) : super(key: key);
 
   final ValueChanged<String> onSubmit;
+  final FocusNode focusNode;
 
   @override
   State<MessagePage> createState() => _MessagePageState();
@@ -67,8 +68,6 @@ class _MessagePageState extends State<MessagePage> {
     var upload = await ref.putFile(imageFile!).catchError((error) async {
       await firebaseFirestore.collection('chatty').doc(fileName).delete();
       status = 0;
-
-      print("mmmmmmmmmmmmmmmmm $error");
     });
 
     if (status == 1) {
@@ -77,8 +76,6 @@ class _MessagePageState extends State<MessagePage> {
           .collection('chatty')
           .doc(fileName)
           .update({'message': imageUrl});
-
-      print("mmmmmmmmmmmmmmmmm $imageUrl");
     }
   }
 
@@ -99,6 +96,7 @@ class _MessagePageState extends State<MessagePage> {
             child: ValueListenableBuilder<TextDirection>(
               valueListenable: _textDir,
               builder: (context, value, child) => TextField(
+                focusNode: widget.focusNode,
                 minLines: 1,
                 maxLines: 20,
                 style: const TextStyle(
