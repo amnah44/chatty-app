@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 class ChatMessageOther extends StatelessWidget {
@@ -15,7 +16,8 @@ class ChatMessageOther extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return data['type'] == "text" ?
+      Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const SizedBox(width: 8),
@@ -82,6 +84,28 @@ class ChatMessageOther extends StatelessWidget {
           ),
         )
       ],
+    )
+      : Padding(
+      padding: const EdgeInsets.fromLTRB(18, 14, 18, 8),
+      child: Stack(
+        alignment: Alignment.centerLeft,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: data['message'] != ""
+                ? Image.network(
+              data['message'],
+              fit: BoxFit.fill,
+              width: MediaQuery.of(context).size.width * 0.55,
+              height: MediaQuery.of(context).size.height * 0.4,
+            )
+                : SpinKitDualRing(
+              color: Theme.of(context).primaryColorLight,
+              size:64,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

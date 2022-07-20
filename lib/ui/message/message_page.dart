@@ -55,7 +55,7 @@ class _MessagePageState extends State<MessagePage> {
         'id': user.uid,
         'phonenumber': user.phoneNumber ?? "",
         'type': "image",
-        'timestamp': FieldValue.serverTimestamp(),
+        'timestamp': Timestamp.now().millisecondsSinceEpoch,
         'profileImage': user.photoURL ??
             "https://avatars.githubusercontent.com/u/59895284?v=4",
         'message': fileName,

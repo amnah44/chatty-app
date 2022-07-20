@@ -7,20 +7,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:733875005713:android:1a59ff44f656771e7b04b0",
+        "mobilesdk_app_id": "1:733875005713:android:377749161c798e977b04b0",
         "android_client_info": {
           "package_name": "com.example.ffs"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "733875005713-af8qnri6hu9u833odfpdahk4mtle2id1.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.ffs",
-            "certificate_hash": "eb357121dd831a13ffdb083927e1430b3af06368"
-          }
-        },
         {
           "client_id": "733875005713-k1h2vnn98q7vdvba7n1ga3iatgkpqmsj.apps.googleusercontent.com",
           "client_type": 3
@@ -37,6 +29,13 @@
             {
               "client_id": "733875005713-k1h2vnn98q7vdvba7n1ga3iatgkpqmsj.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "733875005713-19d8c9ka890h55rllq6e17qcg7bk310o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ffs"
+              }
             }
           ]
         }

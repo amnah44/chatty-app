@@ -71,7 +71,7 @@ class ChatMessageOwn extends StatelessWidget {
                         )
                       : SpinKitDualRing(
                           color: Theme.of(context).primaryColorLight,
-                          size: 40,
+                          size: 64,
                         ),
                 )
               ],
