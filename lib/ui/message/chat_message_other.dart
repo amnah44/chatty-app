@@ -26,7 +26,7 @@ class ChatMessageOther extends StatelessWidget {
             backgroundImage: NetworkImage(data['profileImage']),
           )
         else
-          const SizedBox(width: 39),
+          const SizedBox(width: 32),
         const SizedBox(width: 8),
         Container(
           margin: const EdgeInsets.only(top: 8),
@@ -86,7 +86,7 @@ class ChatMessageOther extends StatelessWidget {
       ],
     )
       : Padding(
-      padding: const EdgeInsets.fromLTRB(18, 14, 18, 8),
+      padding: const EdgeInsets.fromLTRB(50, 14, 50, 8),
       child: Stack(
         alignment: Alignment.centerLeft,
         children: [
