@@ -1,15 +1,12 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ffs/api/firebase_api.dart';
+import 'package:ffs/util/constants.dart';
 import 'package:ffs/util/direction.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
 
 class MessagePage extends StatefulWidget {
-  MessagePage({Key? key, required this.onSubmit, required this.focusNode}) : super(key: key);
+  MessagePage({Key? key, required this.onSubmit, required this.focusNode})
+      : super(key: key);
 
   final ValueChanged<String> onSubmit;
   final FocusNode focusNode;
@@ -23,6 +20,7 @@ class _MessagePageState extends State<MessagePage> {
   final ValueNotifier<TextDirection> _textDir =
       ValueNotifier(TextDirection.ltr);
   final _controller = TextEditingController();
+  final FirebaseApi firebaseApi = FirebaseApi();
   var _message;
 
   void _onPressed() {
@@ -30,53 +28,6 @@ class _MessagePageState extends State<MessagePage> {
     widget.onSubmit(_message);
     _controller.clear();
     _message = "";
-  }
-
-  File? imageFile;
-
-  Future getImage() async {
-    ImagePicker _image = ImagePicker();
-
-    await _image.pickImage(source: ImageSource.gallery).then((value) {
-      if (value != null) {
-        imageFile = File(value.path);
-        uploadImage();
-      }
-    });
-  }
-
-  Future uploadImage() async {
-    var user = FirebaseAuth.instance.currentUser;
-    String fileName = Uuid().v1();
-    int status = 1;
-
-    if (user != null) {
-      await firebaseFirestore.collection('chatty').doc(fileName).set({
-        'auth': user.displayName ?? "",
-        'id': user.uid,
-        'phonenumber': user.phoneNumber ?? "",
-        'type': "image",
-        'timestamp': Timestamp.now().millisecondsSinceEpoch,
-        'profileImage': user.photoURL ??
-            "https://avatars.githubusercontent.com/u/59895284?v=4",
-        'message': fileName,
-      });
-    }
-    var ref =
-        FirebaseStorage.instance.ref().child("image").child("$fileName.jpg");
-
-    var upload = await ref.putFile(imageFile!).catchError((error) async {
-      await firebaseFirestore.collection('chatty').doc(fileName).delete();
-      status = 0;
-    });
-
-    if (status == 1) {
-      String imageUrl = await upload.ref.getDownloadURL();
-      await firebaseFirestore
-          .collection('chatty')
-          .doc(fileName)
-          .update({'message': imageUrl});
-    }
   }
 
   @override
@@ -105,7 +56,7 @@ class _MessagePageState extends State<MessagePage> {
                   fontFamily: 'Montserrat',
                 ),
                 decoration: InputDecoration(
-                    hintText: "Type a message",
+                    hintText: Constants.typeMessage,
                     contentPadding: const EdgeInsets.all(8),
                     fillColor: Colors.white,
                     filled: true,
@@ -119,7 +70,7 @@ class _MessagePageState extends State<MessagePage> {
                         color: Colors.blue,
                         size: 32,
                       ),
-                      onPressed: () => getImage(),
+                      onPressed: () => firebaseApi.getImage(),
                     )),
                 textDirection: value,
                 controller: _controller,
@@ -158,7 +109,3 @@ class _MessagePageState extends State<MessagePage> {
     );
   }
 }
-
-/*
-
- */

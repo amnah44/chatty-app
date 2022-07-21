@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ffs/api/firebase_api.dart';
 import 'package:ffs/ui/message/message_page.dart';
 import 'package:ffs/ui/message/message_wall_widget.dart';
-import 'package:ffs/util/extension/toast.dart';
+import 'package:ffs/util/constants.dart';
 import 'package:ffs/util/unit/unit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get/get.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.title}) : super(key: key);
@@ -18,7 +18,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final firebaseStore = FirebaseFirestore.instance.collection('chatty');
   String replyMessage = "";
   final focusNode = FocusNode();
 
@@ -33,35 +32,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _signOut() async {
-    await FirebaseAuth.instance.signOut();
-    setState(() {
-      Get.back();
-      'sign out is successful'.toToast();
-    });
-  }
-
-  void _addMessage(String message) async {
-    var user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      await firebaseStore.add({
-        'auth': user.displayName ?? "",
-        'id': user.uid,
-        'phonenumber': user.phoneNumber ?? "",
-        'type': "text",
-        'timestamp': Timestamp.now().millisecondsSinceEpoch,
-        'profileImage': user.photoURL ??
-            "https://avatars.githubusercontent.com/u/59895284?v=4",
-        'message': message,
-      });
-    }
-  }
-
-  void _onDeleteMessage(String docId) async {
-    await firebaseStore.doc(docId).delete();
-    'deleted message'.toToast();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,15 +44,15 @@ class _HomePageState extends State<HomePage> {
           PopupMenuButton(
             position: PopupMenuPosition.under,
             onSelected: (value) {
-              if (value == 'logout') {
-                _signOut();
+              if (value == Constants.logout) {
+                FirebaseApi.signOut();
               }
             },
             itemBuilder: (context) => [
               const PopupMenuItem(
-                value: 'logout',
+                value: Constants.logout,
                 child: Text(
-                  "Logout",
+                  Constants.logout,
                   style: TextStyle(
                     fontSize: 16,
                   ),
@@ -96,9 +66,9 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: firebaseStore
+              stream: FirebaseApi.firebaseStore
                   .orderBy(
-                    'timestamp',
+                    Constants.timestamp,
                     descending: true,
                   )
                   .snapshots(),
@@ -115,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                             height: MediaQuery.of(context).size.height * 0.3,
                           ),
                           const Text(
-                            "No message for now",
+                            Constants.noMessage,
                             style: TextStyle(
                               fontSize: 18,
                               fontFamily: 'Montserrat',
@@ -129,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                   }
                   return MessageWallWidget(
                     messages: snapshot.data!.docs,
-                    onDelete: _onDeleteMessage,
+                    onDelete: FirebaseApi.onDeleteMessage,
                     onSwipeMessage: (message) {
                       replyToMessage(message);
                       focusNode.requestFocus();
@@ -147,7 +117,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           MessagePage(
-            onSubmit: _addMessage,
+            onSubmit: FirebaseApi.addMessage,
             focusNode: focusNode,
           )
         ],
@@ -155,8 +125,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void replyToMessage( String message){
-    setState((){
+  void replyToMessage(String message) {
+    setState(() {
       replyMessage = message;
     });
   }

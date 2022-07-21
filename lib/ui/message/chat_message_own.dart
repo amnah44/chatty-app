@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
+import '../../util/constants.dart';
+
 class ChatMessageOwn extends StatelessWidget {
   ChatMessageOwn({
     Key? key,
@@ -16,7 +18,7 @@ class ChatMessageOwn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return data['type'] == "text"
+    return data[Constants.type] == Constants.text
         ? Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -62,9 +64,9 @@ class ChatMessageOwn extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: data['message'] != ""
+                  child: data[Constants.message] != ""
                       ? Image.network(
-                          data['message'],
+                          data[Constants.message],
                           fit: BoxFit.fill,
                           width: MediaQuery.of(context).size.width * 0.55,
                           height: MediaQuery.of(context).size.height * 0.4,

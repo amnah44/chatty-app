@@ -14,6 +14,8 @@ import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:get/get.dart';
 
+import '../../util/constants.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -22,7 +24,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final firebaseStore = FirebaseFirestore.instance.collection('chatty');
+  final firebaseStore = FirebaseFirestore.instance.collection(Constants.chatty);
   int _currentPage = 0;
   final PageController _pageController = PageController(initialPage: 0);
 
@@ -52,7 +54,6 @@ class _LoginPageState extends State<LoginPage> {
         curve: Curves.easeIn,
       );
     });
-
   }
 
   @override
@@ -69,24 +70,26 @@ class _LoginPageState extends State<LoginPage> {
 
   void _signIn() async {
     try {
-      final cred = await AuthProvider().signInWithGoogle();
-      print(cred);
-      setState(() {
-        Unit.isSignIn = true;
-        Get.to(HomePage(
-          title: 'Chatty',
-        ));
-      });
+      await AuthProvider().signInWithGoogle();
+      setState(
+        () {
+          Unit.isSignIn = true;
+          Get.to(
+            HomePage(
+              title: Constants.chatty,
+            ),
+          );
+        },
+      );
     } catch (e) {
       "Login failed: $e".toToast;
-      // print("Login failed: $e");
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return (Unit.isSignIn)
-        ? HomePage(title: "Chatty")
+        ? HomePage(title: Constants.chatty)
         : Scaffold(
             body: Container(
               color: Colors.white,

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ffs/ui/home/custom_floating_action_buton.dart';
 import 'package:ffs/ui/message/chat_message_other.dart';
+import 'package:ffs/util/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,8 +26,8 @@ class MessageWallWidget extends StatelessWidget {
   bool _shouldDisplayAvatar(int index) {
     if (index == 0) return true;
 
-    var previousId = messages[index - 1]['id'];
-    var currentId = messages[index]['id'];
+    var previousId = messages[index - 1][Constants.id];
+    var currentId = messages[index][Constants.id];
 
     return previousId != currentId;
   }
@@ -54,10 +55,10 @@ class MessageWallWidget extends StatelessWidget {
           itemBuilder: (builder, index) {
             final user = FirebaseAuth.instance.currentUser;
 
-            if (user?.uid == messages[index]['id']) {
+            if (user?.uid == messages[index][Constants.id]) {
               return Dismissible(
                 onDismissed: (_) => onDelete(messages[index].id),
-                key: ValueKey(messages[index]['timestamp']),
+                key: ValueKey(messages[index][Constants.timestamp]),
                 child: ChatMessageOwn(
                   data: messages[index].data() as Map<String, dynamic>,
                   index: index,
