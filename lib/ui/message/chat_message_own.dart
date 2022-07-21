@@ -58,26 +58,37 @@ class ChatMessageOwn extends StatelessWidget {
             ],
           )
         : Padding(
-            padding: const EdgeInsets.fromLTRB(18, 14, 18, 8),
+            padding: const EdgeInsets.fromLTRB(18, 8, 18, 0),
             child: Stack(
               alignment: Alignment.centerRight,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: data[Constants.message] != ""
-                      ? Image.network(
-                          data[Constants.message],
-                          fit: BoxFit.fill,
-                          width: MediaQuery.of(context).size.width * 0.55,
-                          height: MediaQuery.of(context).size.height * 0.4,
-                        )
-                      : SpinKitDualRing(
-                          color: Theme.of(context).primaryColorLight,
-                          size: 64,
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.55,
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: Theme.of(context).primaryColorLight,
+                    border: Border.all(
+                      color: Theme.of(context).primaryColorDark,
+                      width: 2
+                    )
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: data[Constants.message] != ""
+                        ? Image.network(
+                            data[Constants.message],
+                            fit: BoxFit.fill,
+                          )
+                        : SpinKitDualRing(
+                          color: Theme.of(context).primaryColorDark,
+                          size: 24,
                         ),
+                  ),
                 )
               ],
             ),
           );
   }
+
 }
