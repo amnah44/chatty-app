@@ -26,6 +26,7 @@ class FirebaseApi {
         Constants.timestamp: Timestamp.now().millisecondsSinceEpoch,
         Constants.profileImage: user.photoURL ?? Constants.defaultImage,
         Constants.message: message,
+        Constants.isTyping: 'false',
       });
     }
   }
@@ -55,6 +56,7 @@ class FirebaseApi {
         Constants.timestamp: Timestamp.now().millisecondsSinceEpoch,
         Constants.profileImage: user.photoURL ?? Constants.defaultImage,
         Constants.message: fileName,
+        Constants.isTyping: 'false',
       });
     }
     var ref = FirebaseStorage.instance

@@ -10,7 +10,7 @@ class Constants{
   static const String profileImage = 'profileImage';
   static const String message = 'message';
   static const String defaultImage = "https://avatars.githubusercontent.com/u/59895284?v=4";
-
+  static const String isTyping = 'isTyping';
   static const String logout = 'Logout';
 
   static const String noMessage = "No message for now";

@@ -67,7 +67,6 @@ class ChatMessageOwn extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.4,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
-                    color: Theme.of(context).primaryColorLight,
                     border: Border.all(
                       color: Theme.of(context).primaryColorDark,
                       width: 2
@@ -75,15 +74,20 @@ class ChatMessageOwn extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: data[Constants.message] != ""
-                        ? Image.network(
-                            data[Constants.message],
-                            fit: BoxFit.fill,
-                          )
-                        : SpinKitDualRing(
-                          color: Theme.of(context).primaryColorDark,
-                          size: 24,
-                        ),
+                    child:  Image.network(
+                      data[Constants.message],
+                      fit: BoxFit.fill,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Center(
+                          child: SpinKitDualRing(
+                            color: Theme.of(context).primaryColorDark,
+                            size: 24,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 )
               ],

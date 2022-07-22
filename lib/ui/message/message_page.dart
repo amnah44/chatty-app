@@ -75,7 +75,10 @@ class _MessagePageState extends State<MessagePage> {
                 textDirection: value,
                 controller: _controller,
                 onChanged: (input) {
-                  setState(() {
+                  setState(() async{
+                    if(_message != null || _message != ""){
+                      await firebaseFirestore.doc(Constants.chatty).update({Constants.isTyping: 'true'});
+                    }
                     _message = input;
                     if (_message.trim().length < 2) {
                       final dir = Direction.getDirection(_message);
